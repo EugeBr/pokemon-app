@@ -5,8 +5,28 @@ const Pokemon = require('../models/Pokemon.model');
 router.get("/", async (req, res) => {
     try {
         const pokemons = await Pokemon.find();
-        console.log(pokemons);
         res.render('./pokemons/pokemons-list', { pokemons });
+    } catch (error) {
+        console.error(error);
+    }
+});
+
+//(C)RUD -> Create a new document in the db
+router.get('/create', (req, res) => {
+    res.render('./pokemons/pokemons-create');
+});
+
+router.post('/create', async (req, res) => {
+    //*object with info from the form {name, image, weight, height}
+    try {
+        const { name, image, weight, height } = req.body;
+        await Pokemon.create({
+            name,
+            image,
+            weight,
+            height
+        })
+        res.redirect('/pokemons');
     } catch (error) {
         console.error(error);
     }
